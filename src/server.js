@@ -1,4 +1,4 @@
-// src/server.js
+
 
 import express from 'express';
 import pino from 'pino-http';
@@ -38,7 +38,8 @@ app.get('/contacts', async (req, res) => {
 
 app.get('/contacts/:contactsId', async (req, res, next) => {
     const  { contactId } = req.params;
-    const contact = await getContactById(contactId);
+    try {
+        const contact = await getContactById(contactId);
 
     if (!contact) {
         res.status(404).json({
@@ -50,6 +51,12 @@ app.get('/contacts/:contactsId', async (req, res, next) => {
     res.status(200).json({
         data: contact,
     });
+
+
+    } catch (error) {
+        next(error);
+    }
+
 });
 
   app.use('*', (req, res, next) => {
