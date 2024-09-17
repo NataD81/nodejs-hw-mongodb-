@@ -36,7 +36,7 @@ app.get('/contacts', async (req, res) => {
     });
 });
 
-app.get('/contacts/:contactsId', async (req, res, next) => {
+app.get('/contacts/:contactId', async (req, res, next) => {
     const  { contactId } = req.params;
     try {
         const contact = await getContactById(contactId);
@@ -45,7 +45,7 @@ app.get('/contacts/:contactsId', async (req, res, next) => {
         return res.status(404).json({
             message: 'Contact not found',
         });
-      
+
     }
     res.status(200).json({
         data: contact,
