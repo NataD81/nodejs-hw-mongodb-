@@ -43,11 +43,14 @@ app.get('/contacts/:contactId', async (req, res, next) => {
 
     if (!contact) {
         return res.status(404).json({
+            status: 404,
             message: 'Contact not found',
         });
 
     }
     res.status(200).json({
+        status: 200,
+        message: 'Successfully found contact!',
         data: contact,
     });
 
