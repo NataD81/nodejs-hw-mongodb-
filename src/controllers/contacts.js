@@ -12,6 +12,7 @@ import { parseFilterParams } from '../utils/arseFilterParams.js';
 
 export const getContactsController = async (req, res, next) => {
   try {
+    // console.log('getContactsController викликається');
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query);
     const filter = parseFilterParams(req.query);
@@ -61,6 +62,27 @@ export const createContactController = async (req, res) => {
     status: 201,
     message: 'Successfully created a contact!',
     data: contact,
+  });
+};
+
+export const upsertContactController = async (req, res, next) => {
+  const { studentId } = req.params;
+
+  const result = await updateContact(studentId, req.body, {
+    upsert: true,
+  });
+
+  if (!result) {
+    next(createHttpError(404, 'Student not found'));
+    return;
+  }
+
+  const status = result.isNew ? 201 : 200;
+
+  res.status(status).json({
+    status,
+    message: `Successfully upserted a student!`,
+    data: result.student,
   });
 };
 
