@@ -19,13 +19,15 @@ import { authenticate } from '../middlewares/authenticate.js';
 
 const router = Router();
 
+router.use(authenticate);
+
 router.get('/', ctrlWrapper(getContactsController));
 
 router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdController));
 
 router.post(
   '/',
-  isValidId,
+
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
@@ -41,11 +43,12 @@ router.put(
 
 router.patch(
   '/:contactId',
+  isValidId,
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
 );
 
-router.use(authenticate);
+
 
 
 export default router;
