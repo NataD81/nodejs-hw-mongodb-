@@ -4,43 +4,50 @@ import { SessionsCollection } from '../db/models/session.js';
 import { UsersCollection } from '../db/models/user.js';
 
 export const authenticate = async (req, res, next) => {
-  const authHeader = req.get('Authorization');
+    try {
+        console.log('Authorization Header:', req.get('Authorization'));
+        const authHeader = req.get('Authorization');
 
-  if (!authHeader) {
-    next(createHttpError(401, 'Please provide Authorization header'));
-    return;
-  }
+        if (!authHeader) {
+           throw createHttpError(401, 'Please provide Authorization header');
 
-  const bearer = authHeader.split(' ')[0];
-  const token = authHeader.split(' ')[1];
+        }
 
-  if (bearer !== 'Bearer' || !token) {
-    next(createHttpError(401, 'Auth header should be of type Bearer'));
-    return;
-  }
+        const [bearer, token] = authHeader.split(' ');
 
-  const session = await SessionsCollection.findOne({ accessToken: token });
 
-  if (!session) {
-    next(createHttpError(401, 'Session not found'));
-    return;
-  }
+        if (bearer !== 'Bearer' || !token) {
+          throw createHttpError(401, 'Auth header should be of type Bearer');
 
-  const isAccessTokenExpired =
-    new Date() > new Date(session.accessTokenValidUntil);
+        }
 
-  if (isAccessTokenExpired) {
-    next(createHttpError(401, 'Access token expired'));
-  }
+        const session = await SessionsCollection.findOne({ accessToken: token });
+        console.log('Session:', session);
+        if (!session) {
+          throw createHttpError(401, 'Session not found');
 
-  const user = await UsersCollection.findById(session.userId);
+        }
 
-  if (!user) {
-    next(createHttpError(401));
-    return;
-  }
+        const isAccessTokenExpired =
+          new Date() > new Date(session.accessTokenValidUntil);
 
-  req.user = user;
+        if (isAccessTokenExpired) {
+          throw createHttpError(401, 'Access token expired');
+        }
 
-  next();
+        const user = await UsersCollection.findById(session.userId);
+
+        if (!user) {
+          throw createHttpError(401);
+
+        }
+
+        req.user = user;
+
+        next();
+    } catch (error) {
+        next (error);
+
+    }
+
 };
