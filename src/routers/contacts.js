@@ -5,8 +5,7 @@ import {
   deleteContactController,
   getContactByIdController,
   getContactsController,
-  upsertContactController,
-  patchContactController,
+ updateContactController,
 } from '../controllers/contacts.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../middlewares/validateBody.js';
@@ -19,33 +18,24 @@ import { authenticate } from '../middlewares/authenticate.js';
 
 const router = Router();
 
-router.get('/', ctrlWrapper(getContactsController));
+router.get('/', authenticate, ctrlWrapper(getContactsController));
 
-router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdController));
+router.get('/:contactId', authenticate, isValidId, ctrlWrapper(getContactByIdController));
 
 router.post(
-  '/',
-  isValidId,
+  '/', authenticate,
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 
-router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
+router.delete('/:contactId', authenticate, isValidId, ctrlWrapper(deleteContactController));
 
-router.put(
-  '/:contactId',
-  isValidId,
-  validateBody(createContactSchema),
-  ctrlWrapper(upsertContactController),
-);
 
 router.patch(
-  '/:contactId',
+  '/:contactId', authenticate,
+  isValidId,
   validateBody(updateContactSchema),
-  ctrlWrapper(patchContactController),
+  ctrlWrapper(updateContactController),
 );
-
-router.use(authenticate);
-
 
 export default router;
