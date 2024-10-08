@@ -18,12 +18,15 @@ import { authenticate } from '../middlewares/authenticate.js';
 
 const router = Router();
 
+router.use(authenticate);
+
 router.get('/', authenticate, ctrlWrapper(getContactsController));
 
 router.get('/:contactId', authenticate, isValidId, ctrlWrapper(getContactByIdController));
 
 router.post(
-  '/', authenticate,
+  '/',
+  isValidId,
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
@@ -32,10 +35,12 @@ router.delete('/:contactId', authenticate, isValidId, ctrlWrapper(deleteContactC
 
 
 router.patch(
-  '/:contactId', authenticate,
-  isValidId,
+  '/:contactId',
   validateBody(updateContactSchema),
   ctrlWrapper(updateContactController),
 );
+
+router.use(authenticate);
+
 
 export default router;
