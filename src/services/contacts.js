@@ -54,7 +54,7 @@ export const updateContact = async (contactId, userId, payload, options = {}) =>
   const rawResult = await ContactsCollection.findByIdAndUpdate(
     { _id: contactId, userId },
     payload,
-    { new: true, ...options },
+    { new: true, runValidators: true, ...options, },
   );
 
   return rawResult;
