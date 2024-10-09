@@ -15,7 +15,7 @@ export const setupServer = () => {
   app.use(
     express.json({
       type: ['application/json', 'application/vnd.api+json'],
-      limit: '100kb',
+
     }),
   );
   app.use(cors());
@@ -30,7 +30,8 @@ export const setupServer = () => {
   );
 
   app.get('/', (req, res) => {
-    res.json({
+    res.status(200).json({
+      status: 200,
       message: 'Hello world!',
     });
   });

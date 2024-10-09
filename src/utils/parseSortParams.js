@@ -14,8 +14,7 @@ const parseSortOrder = (sortOrder) => {
       'email',
       'isFavourite',
       'contactType',
-      'createdAt',
-      'updatedAt',
+      
     ];
 
     if (keysOfStudent.includes(sortBy)) {
