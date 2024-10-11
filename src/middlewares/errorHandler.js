@@ -15,3 +15,9 @@ export const errorHandler = (err, req, res, next) => {
     data: err.message,
   });
 };
+
+// {
+//   "name": "Nata",
+//   "email": "dvoruanchuk81@gmail.com",
+//   "password": "12233555"
+// }
