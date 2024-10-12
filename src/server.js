@@ -6,6 +6,7 @@ import { env } from './utils/env.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import cookieParser from 'cookie-parser';
+import { getAllContacts } from './services/contacts.js';
 
 const PORT = Number(env('PORT', '4000'));
 
