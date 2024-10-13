@@ -1,5 +1,6 @@
 import Joi from 'joi';
 
+
 const authErrorMessages = {
 'string.base': 'Field {#label} must be a string.',
 'string.empty': 'Field {#label} cannot be empty.',
@@ -18,3 +19,4 @@ const authErrorMessages = {
       email: Joi.string().email(),
       password: Joi.string().required(),
     }).messages(authErrorMessages);
+
