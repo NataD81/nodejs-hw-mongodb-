@@ -1,19 +1,25 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
+
 import cookieParser from 'cookie-parser';
 import { env } from './utils/env.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import router from './routers/index.js';
 
+
 const PORT = Number(env('PORT', '4000'));
 
-export const setupServer = () => {
+const setupServer = () => {
   const app = express();
 
+
   app.use(express.json());
+
   app.use(cors());
+  app.use(cookieParser());
+
   app.use(cookieParser());
 
   app.use(
@@ -23,6 +29,7 @@ export const setupServer = () => {
       },
     }),
   );
+
   app.get('/', (req, res) => {
     res.status(200).json({
       status: 200,
@@ -30,14 +37,21 @@ export const setupServer = () => {
     });
   });
 
+
+
+
   app.use(router);
 
-  app.use('*', notFoundHandler);
+  app.use(notFoundHandler);
 
   app.use(errorHandler);
 
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on PORT ${PORT}`);
   });
 };
+
+
+
+export default setupServer;
 
