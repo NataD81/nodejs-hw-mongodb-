@@ -15,6 +15,8 @@ export const createContactSchema = Joi.object({
     .default('personal'),
 });
 
+
+
 export const updateContactSchema = Joi.object({
   name: Joi.string().min(3).max(20).required(),
   phoneNumber: Joi.string()
