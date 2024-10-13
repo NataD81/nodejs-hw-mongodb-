@@ -1,23 +1,20 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
-import contactsRouter from './routers/contacts.js';
+import cookieParser from 'cookie-parser';
 import { env } from './utils/env.js';
-import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import router from './routers/index.js';
 
 const PORT = Number(env('PORT', '4000'));
 
 export const setupServer = () => {
   const app = express();
 
-  app.use(
-    express.json({
-      type: ['application/json', 'application/vnd.api+json'],
-      limit: '100kb',
-    }),
-  );
+  app.use(express.json());
   app.use(cors());
+  app.use(cookieParser());
 
   app.use(
     pino({
@@ -26,33 +23,21 @@ export const setupServer = () => {
       },
     }),
   );
-
   app.get('/', (req, res) => {
-    res.json({
-      message: 'Hello world!',
+    res.status(200).json({
+      status: 200,
+      message: 'Home page!',
     });
   });
 
-  app.use(contactsRouter);
+  app.use(router);
 
   app.use('*', notFoundHandler);
 
   app.use(errorHandler);
 
-  //   app.use('*', (req, res, next) => {
-  //     res.status(404).json({
-  //       message: 'Not found',
-  //     });
-  //   });
-
-  //   app.use((err, req, res, next) => {
-  //     res.status(500).json({
-  //       message: 'Something went wrong',
-  //       error: err.message,
-  //     });
-  //   });
-
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
 };
+
