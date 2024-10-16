@@ -9,3 +9,4 @@ export function env(name, defaultValue) {
 
   throw new Error(`Missing: process.env['${name}'].`);
 }
+console.log('CLOUD_NAME:', process.env.CLOUD_NAME);
