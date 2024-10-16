@@ -9,6 +9,10 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { env } from '../utils/env.js';
+
 
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -49,6 +53,16 @@ export const getContactByIdController = async (req, res, next) => {
 
 export const createContactController = async (req, res) => {
   const { name, phoneNumber, email, isFavourite, contactType } = req.body;
+  const photo = req.file;
+  let photoUrl;
+
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
 
   if (!name || !phoneNumber || !contactType) {
     throw createHttpError(
@@ -64,6 +78,7 @@ export const createContactController = async (req, res) => {
     isFavourite,
     contactType,
     userId: req.user._id,
+    photo: photoUrl,
   });
 
   res.status(201).json({
@@ -75,9 +90,23 @@ export const createContactController = async (req, res) => {
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const updatedContact = await updateContact(contactId, req.user._id, req.body);
+  const photo = req.file;
+  let photoUrl;
 
-  if (!updatedContact) {
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
+  const contact = await updateContact(contactId, req.user._id, {
+    ...req.body,
+    photo: photoUrl,
+  });
+
+  if (!contact) {
     next(createHttpError(404, 'Contact not found'));
     return;
   }
@@ -85,7 +114,7 @@ export const patchContactController = async (req, res, next) => {
   res.status(200).json({
     status: 200,
     message: `Successfully patched a contact!`,
-    data: updatedContact,
+    data: contact,
   });
 };
 
