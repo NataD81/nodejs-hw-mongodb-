@@ -7,6 +7,7 @@ import { env } from './utils/env.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import router from './routers/index.js';
+import { UPLOAD_DIR } from './constants/index.js';
 
 
 const PORT = Number(env('PORT', '4000'));
@@ -41,10 +42,11 @@ const setupServer = () => {
 
 
   app.use(router);
-
-  app.use(notFoundHandler);
+  app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('*', notFoundHandler);
 
   app.use(errorHandler);
+  ;
 
   app.listen(PORT, () => {
     console.log(`Server is running on PORT ${PORT}`);
