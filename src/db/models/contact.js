@@ -25,16 +25,15 @@ const contactsSchema = new Schema(
     },
     userId: {
       type: Schema.Types.ObjectId,
-
       required: true,
       ref: 'users',
     },
+    photo: { type: String },
   },
   {
     timestamps: true,
     versionKey: false,
   },
-
 );
 
 export const ContactsCollection = model('contacts', contactsSchema);
