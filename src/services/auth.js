@@ -12,7 +12,6 @@ import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
-
 export const registerUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
   if (user) throw createHttpError(409, 'email in use');
@@ -25,7 +24,6 @@ export const registerUser = async (payload) => {
   });
 
 };
-
 export const loginUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
   if (!user) {
@@ -40,7 +38,6 @@ export const loginUser = async (payload) => {
   }
 
   await SessionsCollection.deleteOne({ userId: user._id });
-
 
   const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
@@ -83,9 +80,7 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
     throw createHttpError(401, 'Session token expired');
   }
 
-
   const newSession = createSession();
-
   await SessionsCollection.deleteOne({ _id: sessionId, refreshToken });
 
   return await SessionsCollection.create({
@@ -97,7 +92,6 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
 export const logoutUser = async (sessionId) => {
   await SessionsCollection.deleteOne({ _id: sessionId });
 };
-
 
 export const requestResetToken = async (email) => {
   const user = await UsersCollection.findOne({ email });
@@ -145,7 +139,6 @@ export const requestResetToken = async (email) => {
     );
   }
 };
-
 
 export const resetPassword = async (payload) => {
   let entries;
