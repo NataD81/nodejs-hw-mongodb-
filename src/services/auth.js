@@ -1,17 +1,18 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { randomBytes } from 'crypto';
-import { UsersCollection } from '../db/models/user.js';
-import createHttpError from 'http-errors';
-import { FIFTEEN_MINUTES,  SMTP, TEMPLATES_DIR, THIRTY_DAYS } from '../constants/index.js';
-import { SessionsCollection } from '../db/models/session.js';
-import { env } from '../utils/env.js';
 
-import  { sendMail }  from '../utils/sendMail.js';
 import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
+import jwt from 'jsonwebtoken';
+import { randomBytes } from 'crypto';
+import { UsersCollection } from '../db/models/user.js';
+import createHttpError from 'http-errors';
+
+import { FIFTEEN_MINUTES, SMTP, TEMPLATES_DIR, THIRTY_DAYS } from '../constants/index.js';
+import { SessionsCollection } from '../db/models/session.js';
+import { sendMail } from '../utils/sendMail.js';
+import { env } from '../utils/env.js';
 export const registerUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
   if (user) throw createHttpError(409, 'email in use');
