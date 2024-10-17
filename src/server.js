@@ -20,6 +20,7 @@ export const setupServer = () => {
 
   app.use(cookieParser());
 
+  
   app.use(
     pino({
       transport: {
