@@ -64,10 +64,17 @@ export const updateContact = async (contactId, userId, payload, options = {}) =>
   const rawResult = await ContactsCollection.findByIdAndUpdate(
     { _id: contactId, userId },
     payload,
-    { new: true, runValidators: true, ...options, },
+    { new: true, includeResultMetadata: true, ...options, },
+
   );
 
-  return rawResult;
+  if (!rawResult || !rawResult.value) {
+    return null;
+  }
+return {
+    contact: rawResult.value,
+    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
+  };
 };
 
 export const deleteContact = async (contactId, userId) => {
