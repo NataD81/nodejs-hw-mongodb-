@@ -1,9 +1,5 @@
 import createHttpError from 'http-errors';
-
 import { loginOrSignupWithGoogle, registerUser, requestResetToken, resetPassword } from '../services/auth.js';
-
-import { registerUser, requestResetToken, resetPassword } from '../services/auth.js';
-
 import { loginUser } from '../services/auth.js';
 import { THIRTY_DAYS } from '../constants/index.js';
 import { refreshUsersSession } from '../services/auth.js';
