@@ -1,10 +1,16 @@
 import createHttpError from 'http-errors';
+
 import { loginOrSignupWithGoogle, registerUser, requestResetToken, resetPassword } from '../services/auth.js';
+
+import { registerUser, requestResetToken, resetPassword } from '../services/auth.js';
+
 import { loginUser } from '../services/auth.js';
 import { THIRTY_DAYS } from '../constants/index.js';
 import { refreshUsersSession } from '../services/auth.js';
 import { logoutUser } from '../services/auth.js';
+
 import { generateAuthUrl } from '../utils/googleOAuth2.js';
+
 
 export const registerUserController = async (req, res) => {
   const { name, email, password } = req.body;
@@ -107,6 +113,7 @@ export const resetPasswordController = async (req, res) => {
     status: 200,
     message: 'Password has been successfully reset.',
     data: {},
+
   });
 };
 
@@ -132,5 +139,6 @@ export const loginWithGoogleController = async (req, res) => {
     data: {
       accessToken: session.accessToken,
     },
+
   });
 };
